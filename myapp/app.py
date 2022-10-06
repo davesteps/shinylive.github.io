@@ -1,6 +1,7 @@
 from shiny import App, render, ui
 
 # Import modules for plot rendering
+
 import numpy as np
 import matplotlib.pyplot as plt
 
