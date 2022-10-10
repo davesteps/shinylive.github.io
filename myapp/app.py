@@ -3,16 +3,22 @@ from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, reactive_read, register_widget
 
 import ipyleaflet as L
+import matplotlib.pyplot as plt
+import numpy as np
 
 app_ui = ui.page_fluid(
     ui.div(
         ui.input_slider("zoom", "Map zoom level", value=12, min=1, max=18),
+        ui.input_slider("n", "N", 0, 100, 20),
+        ui.output_plot("plot"),
         ui.output_ui("map_bounds"),
         style=css(
             display="flex", justify_content="center", align_items="center", gap="2rem"
         ),
+
     ),
-    output_widget("map"),
+    output_widget("map")
+
 )
 
 
@@ -47,5 +53,11 @@ def server(input, output, session):
 
         return ui.p(f"Latitude: {lat}", ui.br(), f"Longitude: {lon}")
 
+    @output
+    @render.plot(alt="A histogram")
+    def plot():
+        np.random.seed(19680801)
+        x = 100 + 15 * np.random.randn(437)
+        plt.hist(x, input.n(), density=True)
 
 app = App(app_ui, server)
